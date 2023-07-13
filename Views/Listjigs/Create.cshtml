@@ -1,0 +1,119 @@
+﻿@model BaoLoi.Models.Listjig
+
+@{
+    ViewData["Active"] = "4";
+
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/adminlte-master/plugins/jquery/jquery.min.js"></script>
+<style>
+    .col-form-label {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div class="content-header">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Nhập dữ liệu mới</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="breadcrumb-item active">Quản lý List Jig</li>
+                            <li class="breadcrumb-item active">Nhập dữ liệu mới</li>
+
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <form asp-controller="Listjigs" asp-action="Create" method="post" class="form-horizontal">
+                <div class="card card-success shadow">
+                    <div class="card-header">
+                        <h3 class="card-title"> <i class="fas fa-caret-down"> </i>  Nhập thông tin</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Model</label>
+                            <div class="col-9">
+                                <select asp-for="Model" class="form-control" asp-items="ViewBag.list_model2"></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Cell</label>
+                            <div class="col-9">
+                                <input asp-for="Cell" class="form-control" placeholder="Nhập số cell (Có thể không nhập)" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Công đoạn</label>
+                            <div class="col-9">
+                                <input asp-for="Station" class="form-control is-invalid" required="required" placeholder="Nhập công đoạn" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Tên Jig</label>
+                            <div class="col-9">
+                                <input asp-for="Jigname" class="form-control is-invalid" required="required" placeholder="Nhập tên jig" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Mã Jig</label>
+                            <div class="col-9">
+                                <input asp-for="Jigno" class="form-control " placeholder="Nhập mã jig" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Jig quan trọng</label>
+                            <div class="col-9">
+                                <select asp-for="Quantrong" class="form-control" asp-items="ViewBag.list_quantrong"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success float-right "><i class="fa fa-check"> </i> Hoàn thành</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </div>
+            </form>
+
+        </div>
+    </section>
+</body>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>
+<script>
+    $('input').on('keyup', function () {
+        if ($(this).val().length > 0) {
+            $(this).removeClass('is-invalid')
+            $(this).addClass('is-valid')
+        } else {
+            $(this).removeClass('is-valid')
+            $(this).addClass('is-invalid')
+        }
+    });
+</script>

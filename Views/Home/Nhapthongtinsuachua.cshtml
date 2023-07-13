@@ -1,0 +1,288 @@
+﻿@model BaoLoi.Models.Dulieu
+
+@{
+    ViewData["Active"] = "1";
+    ViewData["Title"] = "Nhapthongtinsuachua";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var model = TempData["model"] as string;
+    var cell = TempData["cell"] as string;
+    var station = TempData["station"] as string;
+
+    ViewBag.model = model;
+    ViewBag.cell = cell;
+    ViewBag.station = station;
+
+}
+<style>
+    .col-3 {
+        text-align: center;
+    }
+</style>
+<script src="~/adminlte-master/plugins/jquery/jquery.min.js"></script>
+
+<body>
+    <div class="content-header">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Xác nhận kết thúc sửa chữa</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="breadcrumb-item active">Xác nhận kết thúc sửa chữa</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+
+    <section class="content">
+        <form asp-controller="Home" asp-action="Nhapthongtinsuachua" method="post">
+            <div class="container-fluid">
+                <div class="card card-success shadow">
+                    <div class="card-header">
+                        <h3 class="card-title"> <i class="fas fa-caret-down"> </i>  Nhập thông tin</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <div class="card-body">
+                            <input type="hidden" name="Id" value="@TempData["id"]" />
+
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Model</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Model" id="model" class="form-control" value="@ViewBag.model" required="required" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Cell</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Cell" class="form-control" value="@ViewBag.cell" required="required" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Station</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Station" id="tenstation" class="form-control" value="@ViewBag.station" required="required" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Người sửa</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="Nguoidamnhiem" class="form-control select2" asp-items="ViewBag.list_nguoidamnhiem" required oninvalid="alert('Chưa chọn người sửa :D ');">
+                                        <option value="">Chọn người sửa</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Tên Jig</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="Tenjig" id="tenjig" class="form-control select2" asp-items="ViewBag.dstenjig" required oninvalid="alert('Chưa chọn tên Jig :D ');">
+                                        <option value="">Chọn tên Jig</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Mã Jig</label>
+                                <div class="col-9">
+                                    <select asp-for="Majig" id="majig" class="form-control select2">
+                                        <option value="">Chọn mã jig</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Loại Jig</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Quantrong" id="quantrong" class="form-control" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Hiện tượng lỗi</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Hientuongloi" class="form-control " required="required" placeholder="Nhập miêu tả về sự cố xảy ra" oninvalid="alert('Phải nhập đầy đủ dữ liệu mới lưu được chứ :D ');" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Nguyên nhân</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Nguyennhan" class="form-control " required="required" placeholder="Nhập nguyên nhân gây ra sự cố" oninvalid="alert('Phải nhập đầy đủ dữ liệu mới lưu được chứ :D ');" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Cách xử lý</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Vandeanhhuong" class="form-control" required="required" placeholder="Nhập cách sửa sự cố" oninvalid="alert('Phải nhập đầy đủ dữ liệu mới lưu được chứ :D ');" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Đối sách</label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Doisach" class="form-control" required="required" placeholder="Nhập cách để khắc phục triệt để sự cố này " oninvalid="alert('Phải nhập đầy đủ dữ liệu mới lưu được chứ :D ');" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Thời gian sửa chữa</label>
+                                <div class="input-group mb-3 col-sm-9">
+                                    <input asp-for="Thoigiansuachua" class="form-control" required="required" placeholder="Nhập thời gian sửa chữa sự cố" oninvalid="alert('Phải nhập đầy đủ dữ liệu mới lưu được chứ :D ');" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">phút</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Xác nhận sửa chữa</label>
+                                <div class="col-sm-9">
+                                    <select asp-for="XacNhanSuaChua" class="form-control" asp-items="ViewBag.list_xacnhanvoi"></select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Hình ảnh</label>
+                                <div class="col-sm-9">
+                                    <input id="imageFile" name="imageFile" type="file" accept="image/*" class=" imageFile btn  btn-secondary btn-block" />
+                                </div>
+                            </div>
+                            <img src="" id="preview" hidden>
+                            <input id="image" type="text" asp-for="Hinhanh" class="form-control" hidden />
+
+                            <img style="width: 100%" src="" id="output">
+
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-default" href="javascript: history.go(-1)"><i class="fa fa-arrow-left"></i> Quay lại</a>
+                            <button style="width:300px" type="submit" class="btn btn-success float-right"><i class="fa fa-check"> </i> Hoàn thành</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </section>
+
+</body>
+
+
+
+<script>
+    $(function () {
+        $("#tenjig").change(function () {
+            var tenjig = $(this).val();
+            var tenmodel = $("#model").val();
+            var tenstation = $("#tenstation").val();
+            console.log(tenjig);
+            $("#majig").empty();
+            //call GetStates method to get list
+            $.getJSON(`/Home/GetJigno?model=${tenmodel}&station=${tenstation}&tenjig=${tenjig}`, function (data) {
+                console.log(data);
+                $("#majig").append(`<option value="${""}">${"Chọn mã Jig"}</option>`);
+                $.each(data, function (i, item) {
+                    $("#majig").append(`<option value="${item.value}">${item.text}</option>`);
+                });
+            });
+            $.getJSON(`/Home/GetQuantrong?model=${tenmodel}&station=${tenstation}&tenjig=${tenjig}`, function (data) {
+                console.log(data);
+                if (data === "Quan trọng") {
+                    $("#quantrong").val(data);
+                    $("#quantrong").removeClass('bg-primary');
+                    $("#quantrong").addClass('bg-danger');
+                }
+                if (data === "Không quan trọng") {
+                    $("#quantrong").val(data);
+                    $("#quantrong").removeClass('bg-danger');
+                    $("#quantrong").addClass('bg-primary');
+                }
+            });
+        })
+    });
+</script>
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#imageFile').change(function (evt) {
+            var files = evt.target.files;
+            var file = files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                delay(2000).then(() => ResizeImage());
+            }
+        });
+    });
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+    function ResizeImage() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var filesToUploads = document.getElementById('imageFile').files;
+            var file = filesToUploads[0];
+            if (file) {
+
+                var reader = new FileReader();
+                // Set the image once loaded into file reader
+                reader.onload = function (e) {
+
+                    var img = document.createElement("img");
+                    img.src = e.target.result;
+
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    var MAX_WIDTH = 800;
+                    var MAX_HEIGHT = 800;
+                    var width = img.width;
+                    var height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    dataurl = canvas.toDataURL(file.type);
+                    document.getElementById('output').src = dataurl;
+                    console.log(dataurl);
+                    document.getElementById('image').value = dataurl;
+
+                    //document.getElementById('nutthunho').disabled = true;
+                    //document.getElementById('nutxacnhan').disabled = false;
+
+                }
+                reader.readAsDataURL(file);
+            }
+        } else {
+            alert('The File APIs are not fully supported in this browser.');
+        }
+    }
+</script>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>

@@ -1,0 +1,105 @@
+﻿@model BaoLoi.Models.Listjig
+
+@{
+    ViewData["Active"] = "4";
+
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .col-form-label {
+        text-align: center;
+    }
+</style>
+
+<title>Xoá thông tin </title>
+
+<section class="content-header">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Xoá dữ liệu này ?</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Quản lý danh sách Jig</li>
+                        <li class="breadcrumb-item active">Xoá dữ liệu </li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <form asp-controller="Listjigs" asp-action="Delete" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="card card-danger shadow">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title"><i class="fas fa-caret-down"> </i> Thông tin dữ liệu </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Model</label>
+                                <div class="col-9 form-control">
+                                    @Html.DisplayFor(model => model.Model)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Cell</label>
+                                <div class="col-9 form-control">
+                                    @Html.DisplayFor(model => model.Cell)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Station</label>
+                                <div class="col-9 form-control">
+                                    @Html.DisplayFor(model => model.Station)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Tên Jig</label>
+                                <div class="col-9 form-control">
+                                    @Html.DisplayFor(model => model.Jigname)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Mã Jig</label>
+                                <div class="col-9 form-control">
+                                    @Html.DisplayFor(model => model.Jigno)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <form asp-action="Delete">
+                                <input type="hidden" asp-for="Id" />
+                                <a class="btn btn-default" href="javascript: history.go(-1)"><i class="fa fa-arrow-left"></i> Quay lại</a>
+                                <button type="submit" class="btn btn-outline-danger float-right "><i class="fa fa-check"> </i> Xác nhận xoá</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+

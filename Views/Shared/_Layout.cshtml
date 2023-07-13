@@ -1,0 +1,274 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link href="~/adminlte-master/plugins/fontawesome-free/css/all.css" rel="stylesheet" />
+    <link href="~/adminlte-master/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/adminlte-master/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/adminlte-master/plugins/toastr/toastr.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/adminlte-master/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte-master/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte-master/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte-master/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/adminlte-master/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/adminlte-master/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/adminlte-master/dist/css/adminlte.min.css">
+
+</head>
+<body class="sidebar-mini layout-navbar-fixed layout-fixed sidebar-collapse " style="height: auto;">
+    <div class="wrapper">
+        <!-- Preloader -->
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4 ">
+            <!-- Brand Logo -->
+            <a href="" class="brand-link">
+                <img src="~/sys.ico" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light"> QUẢN LÝ SỰ CỐ </span>
+            </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                             with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a id="1" href="@Url.Action("Index", "home")" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Trang chủ
+                                    @if (TempData["soluongsuco"] != null)
+                                    {
+                                        if (Convert.ToInt32(TempData["soluongsuco"]) != 0)
+                                        {
+                                            <span class="badge badge-danger right">@TempData["soluongsuco"] sự cố</span>
+                                            TempData.Keep();
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-success right">@TempData["soluongsuco"] sự cố</span>
+                                            TempData.Keep();
+
+                                        }
+                                    }
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="3" href="@Url.Action("thongke", "home")" class="nav-link ">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>Thống kê & Biểu đồ</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="2" href="@Url.Action("Nhapthongtinsuachua_thucong", "home")" class="nav-link ">
+                                <i class="nav-icon fa fa-edit"></i>
+                                <p>Nhập dữ liệu sửa chữa</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="4" href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>
+                                    Quản lý List Jig
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: none;">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Create", "Listjigs")" class="nav-link">
+                                        <i class="nav-icon fas fa-plus"></i>
+                                        <p>Nhập dữ liệu mới</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "listjigs")" class="nav-link ">
+                                        <i class="nav-icon fas fa-folder-open"></i>
+                                        <p>Danh sách chi tiết</p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            &copy; 2023 SANG -
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 2.0
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/adminlte-master/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/adminlte-master/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/adminlte-master/dist/js/adminlte.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="~/adminlte-master/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/adminlte-master/plugins/jszip/jszip.min.js"></script>
+    <script src="~/adminlte-master/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/adminlte-master/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/adminlte-master/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/adminlte-master/plugins/select2/js/select2.full.min.js"></script>
+
+    @if (ViewData["Active"] != null)
+    {
+        <script type="text/javascript">document.getElementById("@ViewData["Active"]").classList.add("active")</script>
+    }
+
+
+
+    <!-- SweetAlert2 -->
+    <script src="~/adminlte-master/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Toastr -->
+    <script src="~/adminlte-master/plugins/toastr/toastr.min.js"></script>
+
+    @if (TempData["OK"] != null)
+    {
+        TempData.Clear();
+        <script>
+            $(function () {
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                toastr.success('THÀNH CÔNG!')
+            });
+        </script>
+    }
+    @if (TempData["NG"] != null)
+    {
+        TempData.Clear();
+        <script>
+            $(function () {
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                toastr.error('KHÔNG THÀNH CÔNG!')
+            });
+        </script>
+    }
+
+
+
+@*    <script>
+        var table = $('#example1').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            language: {
+                url: "/wwwroot/vi.json"
+            },
+            initComplete: function () {
+                var api = this.api();
+
+                new $.fn.dataTable.Buttons(api, {
+                    buttons: [
+                        'copy', 'excel', 'print', 'colvis'
+                    ]
+                });
+
+                api.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            }
+        });
+    </script>*@
+
+
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true,
+                "buttons": ["excel", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+    <!-- InputMask -->
+    <script src="~/adminlte-master/plugins/moment/moment.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/adminlte-master/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script>
+        $(function () {
+
+            //Date picker
+            $('#ngaybatdau').datetimepicker({
+                format: 'yyyy/MM/DD'
+            });
+            //Date picker
+            $('#ngayketthuc').datetimepicker({
+                format: 'yyyy/MM/DD'
+            });
+        })
+    </script>
+
+</body>
+</html>
+

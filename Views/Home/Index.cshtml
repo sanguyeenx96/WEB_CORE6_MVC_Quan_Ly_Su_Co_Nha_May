@@ -1,0 +1,260 @@
+﻿@model List<BaoLoi.Models.Layout>
+@{
+    ViewData["Active"] = "1";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var giamsat = (List<GiamSat>)ViewBag.giamsathn;
+}
+
+@{
+    var tenmodel = Json.Serialize(ViewBag.tenmodel);
+    var soluongsuco = Json.Serialize(ViewBag.soluongsuco);
+    var tile = Json.Serialize(ViewBag.tile);
+}
+<script src="~/adminlte-master/plugins/jquery/jquery.min.js"></script>
+<script src="~/cdn.jsdelivr.net_npm_chart.js@3.0.0_dist_chart.min.js"></script>
+
+<head>
+    <title>Trang chủ</title>
+    <style>
+        .table th, .table td {           
+            text-align: center;
+        }
+            canvas{
+        margin: 0 auto;
+        }
+    </style>
+    <script>
+        setTimeout(function () {
+            location.reload();
+        }, 30000); // Tải lại trang sau 5 giây
+    </script>
+</head>
+<body>
+    <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/294694_canon_icon.ico" alt="AdminLTELogo" height=auto>
+        </div>
+    <div class="content-header">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Danh sách sự cố hiện tại</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                            <li class="breadcrumb-item active">Danh sách sự cố hiện tại</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <section class="content">
+        <form asp-controller="Home" asp-action="Select" method="post">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="info-box bg-secondary ">
+                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-wrench"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Đã sửa chữa trong hôm nay</span>
+                                <span class="info-box-number">
+                                    @TempData["dem"]
+                                    <small>sự cố</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="info-box bg-secondary ">
+                            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-exclamation-triangle"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Sự cố tại Jig quan trọng (Đã sửa)</span>
+                                <span class="info-box-number">
+                                    @TempData["soluongsuco_jigquantrong"]
+                                    <small>sự cố</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="info-box bg-secondary ">
+                            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-bell"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Đang gọi sửa chữa</span>
+                                <span class="info-box-number">
+                                    @TempData["soluongsuco"]
+                                    <small>sự cố</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card shadow ">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table m-0">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Model
+                                        </th>
+                                        <th>
+                                            Cell
+                                        </th>
+                                        <th>
+                                            Station
+                                        </th>
+                                        <th>
+                                            Trạng thái
+                                        </th>
+                                        <th>
+                                            Thời điểm gọi
+                                        </th>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                @Html.DisplayFor(modelItem => item.Model)
+                                            </td>
+                                            <td style ="vertical-align: middle;">
+                                                @Html.DisplayFor(modelItem => item.Cell)
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                @Html.DisplayFor(modelItem => item.Station)
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <span class="badge badge-danger shadow">NG</span>
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                @Html.DisplayFor(modelItem => item.Thoigianbaoloi)
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <button class=" btn btn-block btn-success " type="submit" name="id" value="@item.Id"> <i class="fas fa-check"> </i> Xác nhận kết thúc sửa chữa</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card  col-12">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <canvas class="col-12" id="donutChart" style=" max-width: 60%;"></canvas>
+                            </div>
+                            <table class="table col-4 " style="border-top-style: hidden;">
+
+                                <tbody>
+                                    @foreach (var item in giamsat)
+                                    {
+                                        <tr style="text-align: start;" >
+                                            <td  style="text-align: start ; vertical-align:middle">
+                                                <i class="fa fa-user"></i>  @item.Ten
+                                            </td>
+                                            <td class="project_progress col-7" style="text-align: start;vertical-align:middle">
+                                                <div class="progress progress-sm">
+                                                    @{
+                                                        int phantram = item.Soluongdasua * 10;
+                                                    }
+                                                    <div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: @phantram%">
+                                                    </div>
+                                                </div>
+                                                <small>
+                                                    Đã sửa chữa @item.Soluongdasua sự cố
+                                                </small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</body>
+
+<script>
+    Chart.register(ChartDataLabels); // Enable plugin
+    Chart.defaults.set('plugins.datalabels', {
+        color: 'black',
+        backgroundColor: 'hsla(70 100% 50% / 0.7)',
+        font: {
+            size: 12,
+        },
+        display: true,
+
+    });
+</script>
+
+<script>
+    var model = @Html.Raw(tenmodel);
+    var soluong = @Html.Raw(soluongsuco);
+    var tile = @Html.Raw(tile);
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData = {
+        labels: model,
+        datasets: [
+            {
+                data: soluong,
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+            }
+        ]
+    }
+    var donutOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+            r: {
+                pointLabels: {
+                    display: true,
+                    centerPointLabels: true,
+                    font: {
+                        size: 15
+                    }
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: 'Biểu đồ số lượng sự cố trong ngày hôm nay @DateTime.Now.ToString("dd/MM/yyyy")'
+            }
+        }
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+        type: 'polarArea',
+        data: donutData,
+        options: donutOptions
+    })
+</script>
+
+
+
+
+
+
+

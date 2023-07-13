@@ -1,0 +1,857 @@
+﻿@model IEnumerable<BaoLoi.Models.Dulieu>
+
+@{
+    ViewData["Active"] = "3";
+
+    ViewData["Title"] = "Thongke";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<script src="~/adminlte-master/plugins/chart.js/Chart.min.js"></script>
+*@<script src="~/adminlte-master/plugins/jquery/jquery.min.js"></script>
+<script src="~/cdn.jsdelivr.net_npm_chart.js@3.0.0_dist_chart.min.js"></script>
+
+<script src="~/cdnjs.cloudflare.com_ajax_libs_chartjs-plugin-datalabels_2.2.0_chartjs-plugin-datalabels.min.js"></script>
+<title>Thống kê chi tiết</title>
+
+@{
+    var tenmodel = Json.Serialize(ViewBag.tenmodel);
+    var soluongsuco = Json.Serialize(ViewBag.soluongsuco);
+    var tile = Json.Serialize(ViewBag.tile);
+
+    var ten_jig = Json.Serialize(ViewBag.bd_tenjig);
+    var so_luong = Json.Serialize(ViewBag.bd_soluongsuco);
+    var tilept = Json.Serialize(ViewBag.tilept);
+
+    var jten_jig = Json.Serialize(ViewBag.bdj_tenjig);
+    var jso_luong = Json.Serialize(ViewBag.bdj_soluongsuco);
+    var jtilept = Json.Serialize(ViewBag.tileptj);
+}
+@{
+    var dsquantronghomnay = (List<Dulieu>)ViewBag.quantronghomnay;
+}
+<style>
+    .modal-dialog {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    img {
+        width: 100%;
+        vertical-align: middle;
+    }
+
+    table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+        border-bottom-width: 0;
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
+
+<div class="content-header">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Thống kê & Biểu đồ</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Thống kê & Biểu đồ</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        @if (Model == null)
+        {
+            <div class="row">
+                <div class="col-sm-12 col-lg-6">
+                    <form asp-controller="Home" asp-action="Thongke" method="get">
+                        <div class="card card-success collapsed-card">
+                            <div class="card-header border-success ">
+                                <h3 class="card-title"> Tra cứu dữ liệu </h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool btn-success" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label" style="text-align:center">Ngày bắt đầu</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group date" id="ngaybatdau" data-target-input="nearest">
+                                            <input type="text" name="ngaybatdau" class="form-control datetimepicker-input" data-target="#ngaybatdau">
+                                            <div class="input-group-append" data-target="#ngaybatdau" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label" style="text-align:center">Ngày kết thúc</label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group date" id="ngayketthuc" data-target-input="nearest">
+                                            <input type="text" name="ngayketthuc" class="form-control datetimepicker-input" data-target="#ngayketthuc">
+                                            <div class="input-group-append" data-target="#ngayketthuc" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label" style="text-align:center">Model</label>
+                                    <div class="col-sm-7">
+                                        <select name="model" class="form-control" asp-items="ViewBag.list_model"></select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block"><i class="fas fa-search"> </i> Lọc</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <div class="card card-dark shadow">
+                        <div class="card-header">
+                            <h3 class="card-title"> <i class="fas fa-caret-down"> </i>  Biểu đồ Pareto  </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg">All Model</span>
+                                    <span>Biểu đồ số lượng sự cố theo Model</span>
+                                </p>
+                                <p class="ml-auto d-flex flex-column text-right">
+                                    <span class="text-danger" style="font-size:larger">
+                                        Có <b>@TempData["dem"]</b> sự cố
+                                    </span>
+                                    <span class="text-muted">Trong ngày hôm nay (<b>@DateTime.Now.ToString("dd/MM/yyyy")</b>) </span>
+                                </p>
+                            </div>
+                            <div class="position-relative">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="myChart" height="100" style="display: block; height: 220px; width: 361px;"></canvas>
+                            </div>
+
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg">All Model</span>
+                                    <span>Biểu đồ số lượng sự cố theo tên Jig</span>
+                                </p>
+                            </div>
+                            <div class="position-relative">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="myChart2" height="100" style="display: block; height: 220px; width: 361px;"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block border-right">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="IJP" />
+                                            <button type="submit" class="btn btn-default shadow">
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demIJP"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demIJP"] <small>sự cố</small></h5>
+                                                <span class="description-text">IJP</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block border-right">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="ITB" />
+                                            <button type="submit" class="btn btn-default shadow">
+
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demITB"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demITB"] <small>sự cố</small></h5>
+                                                <span class="description-text">ITB</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block border-right">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="FIXING" />
+                                            <button type="submit" class="btn btn-default shadow">
+
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demFIXING"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demFIXING"] <small>sự cố</small></h5>
+                                                <span class="description-text">FIXING</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block border-right">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="LD2" />
+                                            <button type="submit" class="btn btn-default shadow">
+
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demLD2"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demLD2"] <small>sự cố</small></h5>
+                                                <span class="description-text">LD2</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block border-right">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="LD2B" />
+                                            <button type="submit" class="btn btn-default shadow">
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demLD2B"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demLD2B"] <small>sự cố</small></h5>
+                                                <span class="description-text">LD2B</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <div class="description-block">
+                                        <form asp-controller="Home" asp-action="Thongke" method="get">
+                                            <input type="hidden" name="ngaybatdau" id="ngaybatdau" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="ngayketthuc" id="ngayketthuc" value="@DateTime.Now.ToString("yyyy/MM/dd")" />
+                                            <input type="hidden" name="model" id="model" value="HONTAI" />
+                                            <button type="submit" class="btn btn-default shadow">
+
+                                                @{
+                                                    if (Convert.ToInt32(TempData["demHONTAI"].ToString()) > 0)
+                                                    {
+                                                                            <span class="description-percentage text-danger"><i class="fas fa-caret-up"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                                            <span class="description-percentage text-success"><i class="fas fa-caret-down"></i></span>
+                                                    }
+                                                }
+                                                <h5 class="description-header"> @TempData["demHONTAI"] <small>sự cố</small></h5>
+                                                <span class="description-text">HONTAI</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card card-dark  shadow ">
+                        <div class="card-header">
+                            <h3 class="card-title">  Danh sách sự cố tại Jig quan trọng hôm nay <badge class="badge badge-danger">@TempData["soluongquantronghomnay"] sự cố</badge> </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="example2" class="table table-bordered table-striped bg-white table-responsive">
+                                <thead>
+                                    <tr style="text-align:center ; font-size:small">
+                                        <th>
+                                            Model
+                                        </th>
+                                        <th>
+                                            Cell
+                                        </th>
+                                        <th>
+                                            Station
+                                        </th>
+                                        <th class="col-3">
+                                            Tên Jig
+                                        </th>
+                                        <th>
+                                            Mã Jig
+                                        </th>
+                                        <th>
+                                            Hiện tượng lỗi
+                                        </th>
+
+                                        <th>Hình ảnh</th>
+                                        <th>
+                                            Nguyên nhân
+                                        </th>
+
+                                        <th>
+                                            Cách xử lý
+                                        </th>
+                                        <th>
+                                            Đối sách
+                                        </th>
+                                        <th>
+                                            Thời gian sửa
+                                        </th>
+                                        <th>
+                                            Người sửa
+                                        </th>
+                                        <th>
+                                            Ngày
+                                        </th>
+                                        <th>
+                                            Loại Jig
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in dsquantronghomnay)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Model)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Cell)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Station)
+                                            </td>
+                                            <td class="col-3">
+                                                @Html.DisplayFor(modelItem => item.Tenjig)
+                                            </td>
+                                            <td style="text-align:center">
+                                                @if (item.Majig != null)
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Majig)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-app bg-default">
+                                                        <i class="fa fa-ban"></i> Empty
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Hientuongloi)
+                                            </td>
+                                            <td style="text-align:center">
+                                                @if (item.Hinhanh != null)
+                                                {
+                                                    if (item.Hinhanh.Length > 10)
+                                                    {
+                                                        <img style="width: 100%;height: 100%;" src="@item.Hinhanh" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-app bg-default">
+                                                        <i class="fa fa-ban"></i> Empty
+                                                    </a>
+                                                }
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Nguyennhan)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Vandeanhhuong)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Doisach)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Thoigiansuachua) phút
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Nguoidamnhiem)
+                                            </td>
+                                            <td>
+                                                @item.Ngaygio.ToString("yyyy/MM/dd")
+                                            </td>
+                                            <td>
+                                                @item.Quantrong
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+        @if (Model != null)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <a style="margin-bottom:10px" class="btn btn-default" href="javascript: history.go(-1)"><i class="fa fa-arrow-left"></i> Quay lại</a>
+
+                    <div class="card card-dark shadow">
+                        <div class="card-header">
+                            <h3 class="card-title"> <i class="fas fa-caret-down"> </i>  Biểu đồ Pareto  </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg">@TempData["model"]</span>
+                                    <span>Biểu đồ số lượng sự cố theo Model</span>
+                                </p>
+                                <p class="ml-auto d-flex flex-column text-right">
+                                    <span class="text-muted">
+                                        Có <b>@TempData["total_ng"]</b> sự cố
+                                    </span>
+                                    @{
+                                        if (TempData["ngaybatdau"].ToString() == TempData["ngayketthuc"].ToString())
+                                        {
+                                            <span class="text-muted">Trong ngày <b>@TempData["ngayketthuc"]</b></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Từ ngày <b>@TempData["ngaybatdau"]</b> đến ngày <b>@TempData["ngayketthuc"]</b></span>
+                                        }
+                                    }
+                                </p>
+                            </div>
+
+                            <div class="position-relative mb-4">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="myChart" height="100" style="display: block; height: 200px; width: 361px;"></canvas>
+                            </div>
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span>Biểu đồ số lượng sự cố theo tên Jig</span>
+                                </p>
+                            </div>
+                            <div class="position-relative mb-4">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="myChart3" height="100" style="display: block; height: 200px; width: 361px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-dark shadow">
+                <div class="card-header">
+                    <h3 class="card-title"> <i class="fas fa-caret-down"> </i>  Danh sách chi tiết </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="text-align:center ; font-size:small">
+                                <th>
+                                    Model
+                                </th>
+                                <th>
+                                    Cell
+                                </th>
+                                <th>
+                                    Station
+                                </th>
+                                <th>
+                                    Tên Jig
+                                </th>
+                                <th>
+                                    Mã Jig
+                                </th>
+                                <th>
+                                    Hiện tượng lỗi
+                                </th>
+
+                                <th>Hình ảnh</th>
+                                <th>
+                                    Nguyên nhân
+                                </th>
+
+                                <th>
+                                    Cách xử lý
+                                </th>
+                                <th>
+                                    Đối sách
+                                </th>
+                                <th>
+                                    Thời gian sửa
+                                </th>
+                                <th>
+                                    Người sửa
+                                </th>
+                                <th>
+                                    Ngày
+                                </th>
+                                <th>
+                                    Loại Jig
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Cell)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Station)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tenjig)
+                                    </td>
+                                    <td style="text-align:center">
+                                        @if (item.Majig != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Majig)
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-app bg-default">
+                                                <i class="fa fa-ban"></i> Empty
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Hientuongloi)
+                                    </td>
+                                    <td style="text-align:center">
+                                        @if (item.Hinhanh != null)
+                                        {
+                                            if (item.Hinhanh.Length > 10)
+                                            {
+                                                <img style="width: 100%;height: 100%;" src="@item.Hinhanh" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-app bg-default">
+                                                <i class="fa fa-ban"></i> Empty
+                                            </a>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nguyennhan)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vandeanhhuong)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Doisach)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Thoigiansuachua) phút
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nguoidamnhiem)
+                                    </td>
+                                    <td>
+                                        @item.Ngaygio.ToString("yyyy/MM/dd")
+                                    </td>
+                                    <td>
+                                        @item.Quantrong
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
+
+</section>
+
+
+
+    <script>
+        Chart.register(ChartDataLabels); // Enable plugin
+        Chart.defaults.set('plugins.datalabels', {
+            color: 'black',
+            backgroundColor: 'hsla(70 100% 50% / 0.7)',
+            font: {
+                size: 12,
+            },
+            display: true,
+            align: 'end',
+            anchor: 'start',
+        });
+    </script>
+
+    <script>
+        var model = @Html.Raw(tenmodel);
+        var soluong = @Html.Raw(soluongsuco);
+        var tile = @Html.Raw(tile);
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            data: 
+            {
+                datasets: 
+                [
+                    {
+                        type: 'line',
+                        label: 'Tỉ lệ phần trăm',
+                        data: tile,
+                        yAxisID: 'B',
+                        borderColor: "#BA1E14",
+                        backgroundColor: '#BA1E14',
+                        pointBorderWidth: 1,
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Số lượng sự cố',
+                        data: soluong,
+                        yAxisID: 'A',
+                        backgroundColor: 'rgba(60,141,188,0.9)'
+                    }
+                ],
+                labels: model
+            },
+            options:
+            {            
+            responsive: true,
+            scales: 
+                {
+                    A: 
+                    {
+                        stacked: true,
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { beginAtZero: true, stepSize: 1 },
+                    },
+                    B: 
+                    {
+                    stacked: true,
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true, callback: function (value) {
+                            return value + "%";
+                        }
+                    },
+                    grid: { display: false }
+                    },
+                    x: { ticks: { beginAtZero: true } }
+                }
+            }
+            });
+    </script>
+    <script>
+        var soluong = @Html.Raw(so_luong);
+        var tile = @Html.Raw(tilept);
+        var tenjig = @Html.Raw(ten_jig);
+
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        var myChart = new Chart(ctx, {
+            data: 
+            {
+                datasets: 
+                [
+                    {
+                        type: 'line',
+                        label: 'Tỉ lệ phần trăm',
+                        data: tile,
+                        yAxisID: 'B',
+                        borderColor: "#BA1E14",
+                        backgroundColor: '#BA1E14',
+                        pointBorderWidth: 1,
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Số lượng sự cố',
+                        data: soluong,
+                        yAxisID: 'A',
+                        backgroundColor: '#00a65a'
+                    }
+                ],
+            labels: tenjig
+            },
+            options:
+            {
+            responsive: true,
+            scales: 
+                {
+                    A: 
+                    {
+                        stacked: true,
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { beginAtZero: true, stepSize: 1 },
+                    },
+                    B: 
+                    {
+                    stacked: true,
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true, callback: function (value) {
+                            return value + "%";
+                        }
+                    },
+                    grid: { display: false }
+                    },
+                    x: { ticks: { beginAtZero: true } }
+                }
+            }
+            });
+    </script>
+    <script>
+    var tenjig2 = @Html.Raw(jten_jig);
+    var soluong2 = @Html.Raw(jso_luong);
+    var tile2 = @Html.Raw(jtilept);
+
+        var ctx = document.getElementById('myChart3').getContext('2d');
+        var myChart = new Chart(ctx, {
+            data: 
+            {
+                datasets: 
+                [
+                    {
+                        type: 'line',
+                        label: 'Tỉ lệ phần trăm',
+                        data: tile2,
+                        yAxisID: 'B',
+                        borderColor: "#BA1E14",
+                        backgroundColor: '#BA1E14',
+                        pointBorderWidth: 1,
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Số lượng sự cố',
+                        data: soluong2,
+                        yAxisID: 'A',
+                        backgroundColor: '#00a65a'
+                    }
+                ],
+            labels: tenjig2
+            },
+            options:
+            {
+            responsive: true,
+            scales: 
+                {
+                    A: 
+                    {
+                        stacked: true,
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { beginAtZero: true, stepSize: 1 },
+                    },
+                    B: 
+                    {
+                    stacked: true,
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true, callback: function (value) {
+                            return value + "%";
+                        }
+                    },
+                    grid: { display: false }
+                    },
+                    x: { ticks: { beginAtZero: true } }
+                }
+            }
+            });
+    </script>

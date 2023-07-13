@@ -1,0 +1,10 @@
+{
+  "MyApp": {
+    "commandName": "Project",
+    "launchBrowser": true,
+    "launchUrl": "http://localhost:8007",
+    "environmentVariables": {
+      "ASPNETCORE_ENVIRONMENT": "Development"
+    }
+  }
+}

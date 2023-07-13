@@ -1,0 +1,220 @@
+﻿@model IEnumerable<BaoLoi.Models.Listjig>
+
+@{
+    ViewData["Active"] = "4";
+
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    img {
+        width: 100%;
+        vertical-align: middle;
+    }
+
+    table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+        border-bottom-width: 0;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+</style>
+
+<div class="content-header">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Danh sách chi tiết</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Quản lý List Jig</li>
+                        <li class="breadcrumb-item active">Danh sách chi tiết</li>
+
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @if (Model == null)
+                {
+                    using (Html.BeginForm("Index", "listjigs", FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        <div class="col-md-6 callout callout-success " style="text-align:center">
+                            <div class="row">
+                                <div class="col-2" style="margin:auto">
+                                    Model
+                                </div>
+                                <div class="col-7" style="margin:auto">
+                                    <select id="model" name="model" class="form-control" asp-items="ViewBag.list_model"></select>
+                                </div>
+                                <div class="col-3" style="margin:auto">
+                                    <button type="submit" class="btn btn-block btn-success">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                @if (Model != null)
+                {
+                    <a style="margin-bottom:10px" class="btn btn-default" href="javascript: history.go(-1)"><i class="fa fa-arrow-left"></i> Quay lại</a>
+
+
+
+                    <div class="card card-success shadow">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title"><i class="fas fa-caret-down"> </i> Danh sách Jig tại Model @TempData["modelduocchon"] </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr style="text-align:center ; font-size:small">
+                                        <th>
+                                            Model
+                                        </th>
+                                        <th>
+                                            Cell
+                                        </th>
+                                        <th>
+                                            Station
+                                        </th>
+                                        <th>
+                                            Tên jig
+                                        </th>
+                                        <th>
+                                            Mã jig
+                                        </th>
+                                        <th>
+                                            Jig quan trọng
+                                        </th>
+                                        <th>
+                                            Công cụ
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!String.IsNullOrEmpty(item.Model))
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Model)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!String.IsNullOrEmpty(item.Cell))
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Cell)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!String.IsNullOrEmpty(item.Station))
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Station)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!String.IsNullOrEmpty(item.Jigname))
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Jigname)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!String.IsNullOrEmpty(item.Jigno))
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Jigno)
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Quantrong != null)
+                                                {
+                                                    if (item.Quantrong == "Quan trọng")
+                                                    {
+                                                        <a class="btn btn-block btn-success disabled" style="font-size:smaller">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                    }
+                                                    if (item.Quantrong == "Không quan trọng")
+                                                    {
+                                                        <a class="btn btn-block btn-secondary disabled" style="font-size:smaller">
+                                                            <i class="fas fa-ban"></i>
+                                                        </a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <a class="btn btn-block btn-default disabled" style="font-size:smaller">
+                                                        None
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td class="col-2">
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm "> Sửa</a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Xóa</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
